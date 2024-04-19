@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"goroute/server"
 	"log"
 	"net/http"
 )
 
 // This file is only DEV testing, not actual test file
 func main() {
-	s := Setup(":8080") //gokit.Setup("8080")
+	s := server.Setup(":8080") //gokit.Setup(":8080")
 
 	fmt.Printf("Setup server at port %s", s.Port)
 

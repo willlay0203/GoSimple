@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"net/http"
@@ -20,6 +20,7 @@ func Setup(port string) Server {
 
 func (mux *Server) GET(p string, handler func(http.ResponseWriter, *http.Request)) {
 	mux.Mux.HandleFunc("GET "+p, handler)
+
 }
 
 func (mux *Server) POST(p string, handler func(http.ResponseWriter, *http.Request)) {
