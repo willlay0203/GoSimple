@@ -18,9 +18,12 @@ func Setup(port string) Server {
 	return m
 }
 
+// func (mux *Server) Enable(m middleware.Middleware) {
+
+// }
+
 func (mux *Server) GET(p string, handler func(http.ResponseWriter, *http.Request)) {
 	mux.Mux.HandleFunc("GET "+p, handler)
-
 }
 
 func (mux *Server) POST(p string, handler func(http.ResponseWriter, *http.Request)) {

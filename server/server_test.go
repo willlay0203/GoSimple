@@ -3,7 +3,7 @@ package server_test
 import (
 	"bytes"
 	"errors"
-	. "goroute/server"
+	. "gohttp/server"
 	"log"
 	"net/http"
 	"net/http/httptest"

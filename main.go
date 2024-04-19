@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"goroute/server"
+	"gohttp/middleware"
+	"gohttp/server"
 	"log"
 	"net/http"
 )
@@ -19,7 +20,8 @@ func main() {
 	s.PATCH("/test", testHandler)
 	s.DELETE("/test", testHandler)
 
-	log.Fatal(http.ListenAndServe(s.Port, s.Mux))
+	wrapped := middleware.NewRequestId(s.Mux)
+	log.Fatal(http.ListenAndServe(s.Port, wrapped))
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
