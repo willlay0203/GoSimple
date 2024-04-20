@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gohttp/middleware"
 	"gohttp/server"
-	"log"
 	"net/http"
 )
 
@@ -14,14 +13,18 @@ func main() {
 
 	fmt.Printf("Setup server at port %s", s.Port)
 
+	// Assigning routes
 	s.GET("/test/{id}", testHandler)
 	s.POST("/test", testHandler)
 	s.PUT("/test", testHandler)
 	s.PATCH("/test", testHandler)
 	s.DELETE("/test", testHandler)
 
-	wrapped := middleware.NewRequestId(s.Mux)
-	log.Fatal(http.ListenAndServe(s.Port, wrapped))
+	// Enabling middleware
+	s.Enable(middleware.RequestId())
+	s.Enable(middleware.LogRequest())
+
+	s.Start()
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {

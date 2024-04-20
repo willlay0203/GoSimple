@@ -1,12 +1,15 @@
 package server
 
 import (
+	"gohttp/middleware"
+	"log"
 	"net/http"
 )
 
 type Server struct {
-	Mux  *http.ServeMux
-	Port string
+	Mux         *http.ServeMux
+	Port        string
+	middlewares []middleware.Adapter
 }
 
 func Setup(port string) Server {
@@ -18,9 +21,14 @@ func Setup(port string) Server {
 	return m
 }
 
-// func (mux *Server) Enable(m middleware.Middleware) {
+func (mux *Server) Start() {
+	m := middleware.Adapt(mux.Mux, mux.middlewares...)
+	log.Fatal(http.ListenAndServe(mux.Port, m))
+}
 
-// }
+func (mux *Server) Enable(a middleware.Adapter) {
+	mux.middlewares = append(mux.middlewares, a)
+}
 
 func (mux *Server) GET(p string, handler func(http.ResponseWriter, *http.Request)) {
 	mux.Mux.HandleFunc("GET "+p, handler)
