@@ -1,19 +1,22 @@
 package middleware
 
 import (
-	"fmt"
+	"context"
 	"net/http"
 
 	"github.com/google/uuid"
 )
 
-func RequestId() Adapter {
+const REQUESTID_CONTEXT_KEY ctxKey = "requestId"
+
+func RequestId() Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			id := uuid.New()
-			fmt.Println(id.String())
-			defer fmt.Println("after")
-			h.ServeHTTP(w, r)
+			// Create a new uuid and assign to the context
+			requestId := uuid.New().String()
+			ctx := context.WithValue(r.Context(), REQUESTID_CONTEXT_KEY, requestId)
+
+			h.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }

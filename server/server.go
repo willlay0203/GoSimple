@@ -3,13 +3,15 @@ package server
 import (
 	"gohttp/middleware"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 )
 
 type Server struct {
 	Mux         *http.ServeMux
 	Port        string
-	middlewares []middleware.Adapter
+	middlewares []middleware.Middleware
 }
 
 func Setup(port string) Server {
@@ -23,10 +25,14 @@ func Setup(port string) Server {
 
 func (mux *Server) Start() {
 	m := middleware.Adapt(mux.Mux, mux.middlewares...)
+
+	// Sets the default logging behaviour
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
+
 	log.Fatal(http.ListenAndServe(mux.Port, m))
 }
 
-func (mux *Server) Enable(a middleware.Adapter) {
+func (mux *Server) Enable(a middleware.Middleware) {
 	mux.middlewares = append(mux.middlewares, a)
 }
 
