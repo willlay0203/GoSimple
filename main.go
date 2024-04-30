@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"goroute/server"
-	"log"
+	"gohttp/middleware"
+	"gohttp/server"
 	"net/http"
 )
 
@@ -11,15 +11,19 @@ import (
 func main() {
 	s := server.Setup(":8080") //gokit.Setup(":8080")
 
-	fmt.Printf("Setup server at port %s", s.Port)
+	fmt.Printf("Setup server at port %s\n", s.Port)
 
+	// Assigning routes
 	s.GET("/test/{id}", testHandler)
 	s.POST("/test", testHandler)
 	s.PUT("/test", testHandler)
 	s.PATCH("/test", testHandler)
 	s.DELETE("/test", testHandler)
 
-	log.Fatal(http.ListenAndServe(s.Port, s.Mux))
+	// Enabling middleware
+	s.Enable(middleware.RequestId())
+	s.Enable(middleware.LogRequest())
+	s.Start()
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
