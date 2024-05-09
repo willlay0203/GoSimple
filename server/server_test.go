@@ -3,11 +3,12 @@ package server_test
 import (
 	"bytes"
 	"errors"
-	. "gohttp/server"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	. "github.com/willlay0203/gohttp/server"
 )
 
 const TEST_SUCCESS_STRING = "Test success"

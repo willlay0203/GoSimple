@@ -1,10 +1,11 @@
 package middleware_test
 
 import (
-	"gohttp/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	middleware "github.com/willlay0203/gohttp/middleware"
 )
 
 // Creates a new handler -> wraps new handler with RequestID() -> new handler checks for context
