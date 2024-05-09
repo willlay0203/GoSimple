@@ -1,11 +1,14 @@
 package server
 
 import (
-	"gohttp/middleware"
 	"log"
 	"log/slog"
 	"net/http"
 	"os"
+
+	"github.com/willlay0203/gohttp/middleware"
+
+	"github.com/rs/cors"
 )
 
 type Server struct {
@@ -26,10 +29,13 @@ func Setup(port string) Server {
 func (mux *Server) Start() {
 	m := middleware.Adapt(mux.Mux, mux.middlewares...)
 
+	// Wrap mux with CORs middleware
+	handler := cors.Default().Handler(m)
+
 	// Sets the default logging behaviour
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
 
-	log.Fatal(http.ListenAndServe(mux.Port, m))
+	log.Fatal(http.ListenAndServe(mux.Port, handler))
 }
 
 func (mux *Server) Enable(a middleware.Middleware) {
