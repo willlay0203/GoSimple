@@ -1,7 +1,6 @@
-# GoSimple
+# GoHttp
 
 Example usage
-
 ```
 func main() {
 	s := server.Setup(":8080") //gokit.Setup(":8080")
