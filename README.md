@@ -1,6 +1,7 @@
 # GoHttp
 
 Example usage
+
 ```
 func main() {
 	s := server.Setup(":8080") //gokit.Setup(":8080")
@@ -15,14 +16,15 @@ func main() {
 	s.DELETE("/test", testHandler)
 
 	// Enabling middleware
-	s.Enable(middleware.RequestId())
-	s.Enable(middleware.LogRequest())
+	s.Enable(middleware.RequestLogger())
 	s.Start()
 }
 
-func testHandler(w http.ResponseWriter, r *http.Request) {
+func testHandler(w http.ResponseWriter, r *http.Request) error {
 	fmt.Print("hi")
 	test := r.PathValue("id")
 	fmt.Print(test)
+	// APIError{Status: 500, Msg: "something"}
+	return nil
 }
 ```
