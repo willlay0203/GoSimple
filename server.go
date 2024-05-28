@@ -19,15 +19,6 @@ type Server struct {
 
 type apiFunctionWithError func(w http.ResponseWriter, r *http.Request) error
 
-type APIError struct {
-	Status int
-	Msg    string
-}
-
-func (e APIError) Error() string {
-	return e.Msg
-}
-
 func Setup(port string) Server {
 	m := Server{
 		Mux:  http.NewServeMux(),
@@ -79,11 +70,16 @@ func convertToApiFunction(a apiFunctionWithError) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := a(w, r); err != nil {
 			if e, ok := err.(APIError); ok {
+				// This is the internal	log
 				slog.Error(
-					"",
-					"status", e.Status,
+					"API Response",
+					"status", e.StatusCode,
 					"error", e,
 				)
+				http.Error(w, e.Error(), e.StatusCode)
+			} else {
+				// Default error
+				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 		}
 	}
