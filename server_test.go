@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	. "github.com/willlay0203/gohttp/server"
+	. "github.com/willlay0203/gohttp"
 )
 
 const TEST_SUCCESS_STRING = "Test success"
@@ -93,11 +93,12 @@ func TestRouteSetters(t *testing.T) {
 	}
 }
 
-func mockHandler(w http.ResponseWriter, r *http.Request) {
+func mockHandler(w http.ResponseWriter, r *http.Request) error {
 	w.Write([]byte(TEST_SUCCESS_STRING))
+	return nil
 }
 
-func validateResponse(recorder *httptest.ResponseRecorder) (err error) {
+func validateResponse(recorder *httptest.ResponseRecorder) error {
 	// Check the response code
 	if status := recorder.Code; status != http.StatusOK {
 		return errors.New("Handler returned NOT 200")

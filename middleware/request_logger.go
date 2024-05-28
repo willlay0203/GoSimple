@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-func LogRequest() Middleware {
+func RequestLogger() Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requestId := r.Context().Value(REQUESTID_CONTEXT_KEY)
-			slog.Info("Request has been made",
+			slog.Info("Request",
 				"requestId", requestId,
 				"method", r.Method,
 				"path", r.URL.Path,
