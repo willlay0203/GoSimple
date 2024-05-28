@@ -47,26 +47,26 @@ func (mux *Server) Enable(a middleware.Middleware) {
 }
 
 func (mux *Server) GET(p string, handler apiFunctionWithError) {
-	mux.Mux.HandleFunc("GET "+p, convertToApiFunction(handler))
+	mux.Mux.HandleFunc("GET "+p, convertToApiFunctionWithError(handler))
 }
 
 func (mux *Server) POST(p string, handler apiFunctionWithError) {
-	mux.Mux.HandleFunc("POST "+p, convertToApiFunction(handler))
+	mux.Mux.HandleFunc("POST "+p, convertToApiFunctionWithError(handler))
 }
 
 func (mux *Server) PUT(p string, handler apiFunctionWithError) {
-	mux.Mux.HandleFunc("PUT "+p, convertToApiFunction(handler))
+	mux.Mux.HandleFunc("PUT "+p, convertToApiFunctionWithError(handler))
 }
 
 func (mux *Server) PATCH(p string, handler apiFunctionWithError) {
-	mux.Mux.HandleFunc("PATCH "+p, convertToApiFunction(handler))
+	mux.Mux.HandleFunc("PATCH "+p, convertToApiFunctionWithError(handler))
 }
 
 func (mux *Server) DELETE(p string, handler apiFunctionWithError) {
-	mux.Mux.HandleFunc("DELETE "+p, convertToApiFunction(handler))
+	mux.Mux.HandleFunc("DELETE "+p, convertToApiFunctionWithError(handler))
 }
 
-func convertToApiFunction(a apiFunctionWithError) http.HandlerFunc {
+func convertToApiFunctionWithError(a apiFunctionWithError) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := a(w, r); err != nil {
 			if e, ok := err.(APIError); ok {
@@ -76,6 +76,7 @@ func convertToApiFunction(a apiFunctionWithError) http.HandlerFunc {
 					"status", e.StatusCode,
 					"error", e,
 				)
+				// HTTP Response
 				http.Error(w, e.Error(), e.StatusCode)
 			} else {
 				// Default error
