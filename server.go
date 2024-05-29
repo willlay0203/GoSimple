@@ -22,7 +22,7 @@ type apiFunctionWithError func(w http.ResponseWriter, r *http.Request) error
 func Setup(port string) Server {
 	m := Server{
 		Mux:  http.NewServeMux(),
-		Port: port,
+		Port: ":" + port,
 	}
 
 	m.Enable(middleware.RequestId())
